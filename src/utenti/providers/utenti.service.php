@@ -21,7 +21,6 @@ class UtentiService
     {
         validateString(nome: $nome);
         validateEmail(email: $email);
-
         try {
             $newUser = $this->utentiRepository->create(nome: $nome, email: $email);
             return $newUser;
