@@ -38,5 +38,34 @@ class UtentiService
             throw new Exception('Errore utenti non trovati' . $error->getMessage());
         }
     }
-}
 
+    public function updateName($id, $newValue)
+    {
+        try {
+            $updated = $this->utentiRepository->update($id, 'nome', $newValue);
+            return $updated;
+        } catch (Exception $error) {
+            throw new Exception('Errore aggiornamento nome' . $error->getMessage());
+        }
+    }
+
+    public function updateEmail($id, $newValue)
+    {
+        try {
+            $updated = $this->utentiRepository->update($id, 'email', $newValue);
+            return $updated;
+        } catch (Exception $error) {
+            throw new Exception('Errore aggiornamento email' . $error->getMessage());
+        }
+    }
+
+    public function deleteUser($id)
+    {
+        try {
+            $deleted = $this->utentiRepository->delete($id);
+            return $deleted;
+        } catch (Exception $error) {
+            throw new Exception('Errore eliminazione utente' . $error->getMessage());
+        }
+    }
+}

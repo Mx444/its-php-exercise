@@ -1,49 +1,77 @@
 <?php
-session_start();
-
-include_once __DIR__ . '/../../src/utenti/controllers/utenti.controller.php';
+require_once __DIR__ . '/../../src/utenti/controllers/utenti.controller.php';
 
 $utentiController = new UtentiController();
-$getUsers = $utentiController->GET_GetAll();
+$users = $utentiController->getAllUser();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'nome' => $_POST['nome'],
         'email' => $_POST['email']
     ];
-    $utentiController->POST_Register($data);
+    $utentiController->registerUser($data);
+    header('Location: ./index.php');
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
+    $data = [
+        'id' => $_POST['id'],
+        'newValue' => $_POST['newValue']
+    ];
+    $utentiController->updateName($data);
+    header('Location: ./index.php');
+}
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Page</title>
+    <title>Gestione Utenti</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
+            margin: 20px;
+            background-color: #f4f4f4;
         }
 
         .container {
             max-width: 600px;
-            margin: 50px auto;
+            margin: auto;
+            background: white;
             padding: 20px;
-            background-color: #fff;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
         }
 
-        h1 {
+        h2 {
             text-align: center;
-            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
         }
 
         form {
@@ -51,66 +79,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             flex-direction: column;
         }
 
-        label {
-            margin-bottom: 5px;
-            color: #555;
+        input,
+        button {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
         }
 
-        input[type="text"],
-        input[type="email"] {
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        input[type="submit"] {
-            padding: 10px;
-            background-color: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
+        button {
+            background-color: #28a745;
+            color: white;
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
-            background-color: #0056b3;
+        button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <h1>Registra Utente</h1>
-        <form method="POST" action="">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <input type="submit" value="Submit">
+        <h2>Lista Utenti</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+            </tr>
+            <?php foreach ($users as $user): ?>
+                <tr>
+                    <td><?= $user['id'] ?></td>
+                    <td><?= $user['nome'] ?></td>
+                    <td><?= $user['email'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <h2>Registra Nuovo Utente</h2>
+        <form method="POST">
+            <input type="text" name="nome" placeholder="Nome" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <button type="submit">Registra</button>
+        </form>
+
+        <h2>Aggiorna Nome Utente</h2>
+        <form method="PUT">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="number" name="id" placeholder="ID Utente" required>
+            <input type="text" name="newValue" placeholder="Nuovo Nome" required>
+            <button type="submit">Aggiorna</button>
         </form>
     </div>
-
-    <div class="container">
-        <h1>Utenti</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($getUsers as $user) : ?>
-                    <tr>
-                        <td><?= $user['id'] ?></td>
-                        <td><?= $user['nome'] ?></td>
-                        <td><?= $user['email'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
 </body>
 
 </html>

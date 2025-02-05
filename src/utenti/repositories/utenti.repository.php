@@ -15,7 +15,7 @@ class UtentiRepository
     $query = "INSERT INTO utenti (nome, email) VALUES (:nome, :email)";
     $stmt = $this->db->prepare($query);
     $stmt->execute(['nome' => $nome, 'email' => $email]);
-    return (int) $this->db->lastInsertId();
+    return (int) $this->db->lastInsertId() ?: null;
   }
 
   public function read()
@@ -31,7 +31,7 @@ class UtentiRepository
     $query = "UPDATE utenti SET $col = :value WHERE id = :id";
     $stmt = $this->db->prepare($query);
     $stmt->execute(['id' => $id, 'value' => $value]);
-    return $stmt->rowCount();
+    return $stmt->rowCount() ?: null;
   }
 
   public function delete($id)
@@ -39,6 +39,6 @@ class UtentiRepository
     $query = "DELETE FROM utenti WHERE id = :id";
     $stmt = $this->db->prepare($query);
     $stmt->execute(['id' => $id]);
-    return $stmt->rowCount();
+    return $stmt->rowCount() ?: null;
   }
 }
