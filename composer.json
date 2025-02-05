@@ -1,0 +1,17 @@
+{
+    "name": "david/php-its",
+    "autoload": {
+        "psr-4": {
+            "David\\PhpIts\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mx444",
+            "email": "mybbtester@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
