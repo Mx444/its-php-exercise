@@ -14,58 +14,60 @@ class UtentiService
     {
         $this->connection = new Database();
         $this->db = $this->connection->getConnection();
-        $this->utentiRepository = new UtentiRepository($this->db);
+        $this->utentiRepository = new UtentiRepository(db: $this->db);
     }
 
-    public function register($nome, $email)
+    public function register(string $nome, string $email): int|null
     {
-        validateString($nome);
-        validateEmail($email);
+        validateString(nome: $nome);
+        validateEmail(email: $email);
 
         try {
-            $newUser = $this->utentiRepository->create($nome, $email);
+            $newUser = $this->utentiRepository->create(nome: $nome, email: $email);
             return $newUser;
         } catch (Exception $error) {
-            throw new Exception('Errore registazione' . $error->getMessage());
+            throw new Exception(message: 'Errore registazione' . $error->getMessage());
         }
     }
 
-    public function getAllUser()
+    public function getAllUser(): array
     {
         try {
             return $this->utentiRepository->read();
         } catch (Exception $error) {
-            throw new Exception('Errore utenti non trovati' . $error->getMessage());
+            throw new Exception(message: 'Errore utenti non trovati' . $error->getMessage());
         }
     }
 
-    public function updateName($id, $newValue)
+    public function updateName(int $id, string $newValue): int|null
     {
+        validateString(nome: $newValue);
         try {
-            $updated = $this->utentiRepository->update($id, 'nome', $newValue);
+            $updated = $this->utentiRepository->update(id: $id, col: 'nome', value: $newValue);
             return $updated;
         } catch (Exception $error) {
-            throw new Exception('Errore aggiornamento nome' . $error->getMessage());
+            throw new Exception(message: 'Errore aggiornamento nome' . $error->getMessage());
         }
     }
 
-    public function updateEmail($id, $newValue)
+    public function updateEmail(int $id, string $newValue): int|null
     {
+        validateEmail(email: $newValue);
         try {
-            $updated = $this->utentiRepository->update($id, 'email', $newValue);
+            $updated = $this->utentiRepository->update(id: $id, col: 'email', value: $newValue);
             return $updated;
         } catch (Exception $error) {
-            throw new Exception('Errore aggiornamento email' . $error->getMessage());
+            throw new Exception(message: 'Errore aggiornamento email' . $error->getMessage());
         }
     }
 
-    public function deleteUser($id)
+    public function deleteUser(int $id): int|null
     {
         try {
-            $deleted = $this->utentiRepository->delete($id);
+            $deleted = $this->utentiRepository->delete(id: $id);
             return $deleted;
         } catch (Exception $error) {
-            throw new Exception('Errore eliminazione utente' . $error->getMessage());
+            throw new Exception(message: 'Errore eliminazione utente' . $error->getMessage());
         }
     }
 }
