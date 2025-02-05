@@ -4,12 +4,13 @@ session_start();
 include_once __DIR__ . '/../../src/utenti/controllers/utenti.controller.php';
 
 $utentiController = new UtentiController();
+$getUsers = $utentiController->GET_GetAll();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
         'nome' => $_POST['nome'],
         'email' => $_POST['email']
     ];
-    $utentiController->APIRegister($data);
+    $utentiController->POST_Register($data);
 }
 
 ?>
@@ -31,6 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="email" placeholder="email">
         <button type="submit">Registrati</button>
     </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($getUsers as $user) : ?>
+                <tr>
+                    <td><?= $user['nome'] ?></td>
+                    <td><?= $user['email'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
 </body>
 
 </html>

@@ -23,6 +23,6 @@ class UtentiRepository
     $query = "SELECT * FROM utenti";
     $stmt = $this->db->prepare($query);
     $stmt->execute();
-    return $stmt->fetch(mode: PDO::FETCH_ASSOC) ?: null;
+    return $stmt->fetchAll(mode: PDO::FETCH_ASSOC) ?: null;
   }
 }
