@@ -43,6 +43,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ./index.php');
         exit();
     }
+
+    if (isset($_POST['deleteAll'])) {
+        $utentiController->deleteAllUser();
+        header('Location: ./index.php');
+        exit();
+    }
 }
 ?>
 
@@ -167,17 +173,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" name="deleteUser">Elimina</button>
         </form>
 
+        <h2>Elimina Tutti gli Utenti</h2>
+        <form method="POST">
+            <button type="submit" name="deleteAll">Elimina Tutti</button>
+        </form>
+
         <?php if (isset($_SESSION['success'])): ?>
             <div style="color: green; margin-top: 20px;">
                 <?= $_SESSION['success'] ?>
             </div>
+            <?php unset($_SESSION['success']);
+            ?>
         <?php endif; ?>
 
         <?php if (isset($_SESSION['error'])): ?>
             <div style="color: red; margin-top: 20px;">
                 <?= $_SESSION['error'] ?>
             </div>
+            <?php unset($_SESSION['error']);
+            ?>
         <?php endif; ?>
+
     </div>
 </body>
 

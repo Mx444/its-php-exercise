@@ -69,4 +69,14 @@ class UtentiService
             throw new Exception(message: 'Errore eliminazione utente' . $error->getMessage());
         }
     }
+
+    public function deleteAllUser(): int|null
+    {
+        try {
+            $deleted = $this->utentiRepository->deleteAll();
+            return $deleted;
+        } catch (Exception $error) {
+            throw new Exception(message: 'Errore eliminazione utenti' . $error->getMessage());
+        }
+    }
 }

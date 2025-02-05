@@ -61,4 +61,16 @@ class UtentiRepository
       return null;
     }
   }
+
+  public function deleteAll(): ?int
+  {
+    try {
+      $query = "DELETE FROM utenti";
+      $stmt = $this->db->prepare($query);
+      $stmt->execute();
+      return $stmt->rowCount() ?: null;
+    } catch (PDOException $e) {
+      return null;
+    }
+  }
 }

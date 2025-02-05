@@ -91,4 +91,16 @@ class UtentiController
         header(header: 'Location: ./index.php');
         exit();
     }
+
+    public function deleteAllUser(): never
+    {
+        try {
+            $this->utentiService->deleteAllUser();
+            $_SESSION['success'] = "Utenti eliminaticon successo";
+        } catch (Exception $error) {
+            $_SESSION['error'] = $error->getMessage();
+        }
+        header(header: 'Location: ./index.php');
+        exit();
+    }
 }
