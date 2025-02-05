@@ -20,7 +20,7 @@ class UtentiService
     public function register($nome, $email)
     {
         validateString($nome);
-        validateString($email);
+        validateEmail($email);
 
         try {
             $newUser = $this->utentiRepository->create($nome, $email);
@@ -39,3 +39,4 @@ class UtentiService
         }
     }
 }
+

@@ -1,6 +1,14 @@
 <?php
-function validateString(string $data){
-    if (!preg_match('/^[a-zA-Z]{3,15}$/', $data)) {
-        throw new Exception("Può contenere solo lettere !");
+function validateString(string $nome) {
+    // Controlla che il nome contenga solo lettere (3-15 caratteri)
+    if (!preg_match('/^[a-zA-Z]{3,15}$/', $nome)) {
+        throw new Exception("Il nome può contenere solo lettere e deve essere lungo tra 3 e 15 caratteri!");
+    }
+}
+
+function validateEmail(string $email) {
+    // Usa filter_var per validare l'email
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        throw new Exception("Email non valida!");
     }
 }
