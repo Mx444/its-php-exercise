@@ -1,23 +1,33 @@
-<?php require_once "process.php"; ?>
+<?php
+session_start();
+
+include_once __DIR__ . '/../../src/utenti/controllers/utenti.controller.php';
+
+$utentiController = new UtentiController();
+ if($_SERVER['REQUEST_METHOD'] === 'POST'){
+$data=[
+    'nome' => $_POST['nome'],
+    'cognome' => $_POST['cognome']
+];
+    $utentiController->APIRegister($data);
+ }
+
+?>
+
 
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form di Inserimento</title>
-    <script src="script.js"></script>
+    <title>Registrazione</title>
 </head>
 <body>
-    <h2>Inserisci i tuoi dati</h2>
-    <form id="userForm" method="post" action="process.php" onsubmit="validateForm(event)">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <button type="submit">Invia</button>
+    <form action="index.php" method="POST">
+        <input type="text" name="nome" placeholder="Nome">
+        <input type="text" name="cognome" placeholder="Cognome">
+        <button type="submit">Registrati</button>
     </form>
 </body>
 </html>
