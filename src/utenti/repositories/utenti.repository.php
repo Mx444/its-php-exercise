@@ -25,4 +25,20 @@ class UtentiRepository
     $stmt->execute();
     return $stmt->fetchAll(mode: PDO::FETCH_ASSOC) ?: null;
   }
+
+  public function update($id, $col, $value)
+  {
+    $query = "UPDATE utenti SET $col = :value WHERE id = :id";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute(['id' => $id, 'value' => $value]);
+    return $stmt->rowCount();
+  }
+
+  public function delete($id)
+  {
+    $query = "DELETE FROM utenti WHERE id = :id";
+    $stmt = $this->db->prepare($query);
+    $stmt->execute(['id' => $id]);
+    return $stmt->rowCount();
+  }
 }
