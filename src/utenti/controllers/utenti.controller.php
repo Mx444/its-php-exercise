@@ -1,6 +1,8 @@
 <?php
+session_start();
 require __DIR__ . '/../providers/utenti.service.php';
 require __DIR__ . '/../../../vendor/autoload.php';
+
 class UtentiController
 {
     private UtentiService $utentiService;
@@ -14,82 +16,79 @@ class UtentiController
     {
         if (isset($data['nome']) && isset($data['email'])) {
             try {
-                $nome = $data['nome'];
-                $email = $data['email'];
-                $this->utentiService->register($nome, $email);
-                http_response_code(201);
+                $this->utentiService->register($data['nome'], $data['email']);
                 $_SESSION['success'] = "Utente registrato con successo";
             } catch (Exception $error) {
-                http_response_code(400);
                 $_SESSION['error'] = $error->getMessage();
             }
         } else {
-            http_response_code(400);
             $_SESSION['error'] = "Errore nella registrazione";
         }
+        header('Location: ./index.php');
+        exit();
     }
 
     public function getAllUser()
     {
         try {
-            $users = $this->utentiService->getAllUser();
-            http_response_code(200);
-            return $users;
+            return $this->utentiService->getAllUser();
         } catch (Exception $error) {
-            http_response_code(400);
             $_SESSION['error'] = $error->getMessage();
+            return [];
         }
     }
 
     public function updateName(array $data)
     {
-        $id = $data['id'];
-        $newValue = $data['$newValue'];
+        if (!isset($data['id']) || !isset($data['newValue'])) {
+            $_SESSION['error'] = "Dati mancanti per l'aggiornamento";
+            header('Location: ./index.php');
+            exit();
+        }
+
         try {
-            $updated = $this->utentiService->updateName($id, $newValue);
-            if ($updated) {
-                http_response_code(200);
-                $_SESSION['success'] = "Nome aggiornato con successo";
-            } else {
-                http_response_code(400);
-                $_SESSION['error'] = "Errore nell'aggiornamento del nome";
-            }
+            $updated = $this->utentiService->updateName($data['id'], $data['newValue']);
+            $_SESSION['success'] = $updated ? "Nome aggiornato con successo" : "Errore nell'aggiornamento del nome";
         } catch (Exception $error) {
-            http_response_code(400);
             $_SESSION['error'] = $error->getMessage();
         }
+        header('Location: ./index.php');
+        exit();
     }
 
     public function updateEmail(array $data)
     {
-        $id = $data['id'];
-        $newValue = $data['newValue'];
+        if (!isset($data['id']) || !isset($data['newValue'])) {
+            $_SESSION['error'] = "Dati mancanti per l'aggiornamento";
+            header('Location: ./index.php');
+            exit();
+        }
+
         try {
-            $updated = $this->utentiService->updateEmail($id, $newValue);
-            if ($updated) {
-                http_response_code(200);
-                $_SESSION['success'] = "Email aggiornata con successo";
-            } else {
-                http_response_code(400);
-                $_SESSION['error'] = "Errore nell'aggiornamento dell'email";
-            }
+            $updated = $this->utentiService->updateEmail($data['id'], $data['newValue']);
+            $_SESSION['success'] = $updated ? "Email aggiornata con successo" : "Errore nell'aggiornamento dell'email";
         } catch (Exception $error) {
-            http_response_code(400);
             $_SESSION['error'] = $error->getMessage();
         }
+        header('Location: ./index.php');
+        exit();
     }
-
 
     public function deleteUser(array $data)
     {
-        $id = $data['id'];
+        if (!isset($data['id'])) {
+            $_SESSION['error'] = "ID mancante per eliminare l'utente";
+            header('Location: ./index.php');
+            exit();
+        }
+
         try {
-            $this->utentiService->deleteUser($id);
-            http_response_code(200);
+            $this->utentiService->deleteUser($data['id']);
             $_SESSION['success'] = "Utente eliminato con successo";
         } catch (Exception $error) {
-            http_response_code(400);
-            $_SESSION['error'] =  $error->getMessage();
+            $_SESSION['error'] = $error->getMessage();
         }
+        header('Location: ./index.php');
+        exit();
     }
 }

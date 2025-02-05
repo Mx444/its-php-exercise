@@ -5,21 +5,44 @@ $utentiController = new UtentiController();
 $users = $utentiController->getAllUser();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = [
-        'nome' => $_POST['nome'],
-        'email' => $_POST['email']
-    ];
-    $utentiController->registerUser($data);
-    header('Location: ./index.php');
-}
+    if (isset($_POST['registerUser'])) {
+        $data = [
+            'nome' => $_POST['nome'],
+            'email' => $_POST['email']
+        ];
+        $utentiController->registerUser($data);
+        header('Location: ./index.php');
+        exit();
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-    $data = [
-        'id' => $_POST['id'],
-        'newValue' => $_POST['newValue']
-    ];
-    $utentiController->updateName($data);
-    header('Location: ./index.php');
+    if (isset($_POST['updateName'])) {
+        $data = [
+            'id' => $_POST['id'],
+            'newValue' => $_POST['newValue']
+        ];
+        $utentiController->updateName($data);
+        header('Location: ./index.php');
+        exit();
+    }
+
+    if (isset($_POST['updateEmail'])) {
+        $data = [
+            'id' => $_POST['id'],
+            'newValue' => $_POST['newValue']
+        ];
+        $utentiController->updateEmail($data);
+        header('Location: ./index.php');
+        exit();
+    }
+
+    if (isset($_POST['deleteUser'])) {
+        $data = [
+            'id' => $_POST['id']
+        ];
+        $utentiController->deleteUser($data);
+        header('Location: ./index.php');
+        exit();
+    }
 }
 ?>
 
@@ -110,9 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
             </tr>
             <?php foreach ($users as $user): ?>
                 <tr>
-                    <td><?= $user['id'] ?></td>
-                    <td><?= $user['nome'] ?></td>
-                    <td><?= $user['email'] ?></td>
+                    <td><?= htmlspecialchars($user['id']) ?></td>
+                    <td><?= htmlspecialchars($user['nome']) ?></td>
+                    <td><?= htmlspecialchars($user['email']) ?></td>
                 </tr>
             <?php endforeach; ?>
         </table>
@@ -121,16 +144,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         <form method="POST">
             <input type="text" name="nome" placeholder="Nome" required>
             <input type="email" name="email" placeholder="Email" required>
-            <button type="submit">Registra</button>
+            <button type="submit" name="registerUser">Registra</button>
         </form>
 
         <h2>Aggiorna Nome Utente</h2>
-        <form method="PUT">
-            <input type="hidden" name="_method" value="PUT">
+        <form method="POST">
             <input type="number" name="id" placeholder="ID Utente" required>
             <input type="text" name="newValue" placeholder="Nuovo Nome" required>
-            <button type="submit">Aggiorna</button>
+            <button type="submit" name="updateName">Aggiorna</button>
         </form>
+
+        <h2>Aggiorna Email Utente</h2>
+        <form method="POST">
+            <input type="number" name="id" placeholder="ID Utente" required>
+            <input type="email" name="newValue" placeholder="Nuova Email" required>
+            <button type="submit" name="updateEmail">Aggiorna</button>
+        </form>
+
+        <h2>Elimina Utente</h2>
+        <form method="POST">
+            <input type="number" name="id" placeholder="ID Utente" required>
+            <button type="submit" name="deleteUser">Elimina</button>
+        </form>
+
+        <?php if (isset($_SESSION['success'])): ?>
+            <div style="color: green; margin-top: 20px;">
+                <?= $_SESSION['success'] ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div style="color: red; margin-top: 20px;">
+                <?= $_SESSION['error'] ?>
+            </div>
+        <?php endif; ?>
     </div>
 </body>
 
